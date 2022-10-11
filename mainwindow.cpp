@@ -10,11 +10,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
     this->setWindowTitle("OverwatchX");
 
-    QWidget* centralWidget = new QWidget(this);
+    QFont uniqueFont = QFont("Roboto medium", 10);
+    this->setFont(uniqueFont);
 
+    QWidget* centralWidget = new QWidget(this);
     QGridLayout *mainLayout = new QGridLayout(centralWidget);
 
-    Switch* proxySwitch = new Switch("On/Off");
+    Switch* proxySwitch = new Switch("Proxy On/Off");
+    proxySwitch->setFont(uniqueFont);
     proxySwitch->setLayoutDirection(Qt::RightToLeft);
     connect(proxySwitch, &Switch::stateChanged, this, &MainWindow::toggleProxyHandler);
 
