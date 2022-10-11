@@ -61,8 +61,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     centralWidget->setLayout(mainLayout);
     this->setCentralWidget(centralWidget);
-    //this->setWindowFlags(Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint);
-    this->setWindowFlag(Qt::WindowStaysOnTopHint, true);
+    this->setWindowFlags(Qt::WindowStaysOnTopHint
+                         | Qt::WindowMinimizeButtonHint
+                         //| Qt::WindowMaximizeButtonHint
+                         | Qt::WindowCloseButtonHint);
 
     this->setGeometry(0, 0, 300, 250);
 }
