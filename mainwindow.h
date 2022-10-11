@@ -12,6 +12,7 @@ public:
 
 private:
     void toggleProxyHandler(int);
+    void copyShellCommandHandler();
 
     QLineEdit* mHttpProxyEdit;
     QLineEdit* mHttpProxyPortEdit;

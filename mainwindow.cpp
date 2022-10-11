@@ -37,6 +37,10 @@ MainWindow::MainWindow(QWidget *parent)
     mIgnoreHostsEdit = new QLineEdit();
     mIgnoreHostsEdit->setText("localhost, 127.0.0.0/8, ::1");
 
+    QPushButton* copyShellCommand = new QPushButton();
+    copyShellCommand->setText("Copy shell command");
+    connect(copyShellCommand, &QPushButton::clicked, this, &MainWindow::copyShellCommandHandler);
+
     mainLayout->addWidget(proxySwitch, 0, 0, 1, 2);
 
     mainLayout->addWidget(httpProxy, 1, 0, 1, 1);
@@ -49,6 +53,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     mainLayout->addWidget(ignoreHosts, 3, 0, 1, 1);
     mainLayout->addWidget(mIgnoreHostsEdit, 3, 1, 1, 2);
+
+    mainLayout->addWidget(copyShellCommand, 4, 0, 1, 3);
 
     centralWidget->setLayout(mainLayout);
     this->setCentralWidget(centralWidget);
@@ -103,4 +109,14 @@ void MainWindow::toggleProxyHandler(int value)
     } else if (value ==0) {
         QProcess::startDetached(program, proxyModeAutoCMD); //Starts execution of command
     }
+}
+
+void MainWindow::copyShellCommandHandler()
+{
+    QString shellCommand = QString("export http_proxy=http://%1 all_proxy=sock5://%2 no_proxy='%3'")
+                            .arg(mHttpProxyEdit->text()+":"+mHttpProxyPortEdit->text(),
+                                 mSocksHostEdit->text()+":"+mSocksHostPortEdit->text(),
+                                 mIgnoreHostsEdit->text());
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(shellCommand);
 }
