@@ -8,33 +8,11 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow{parent}
 {
+    this->setWindowTitle("OverwatchX");
+
     QWidget* centralWidget = new QWidget(this);
 
     QGridLayout *mainLayout = new QGridLayout(centralWidget);
-
-    // Examples
-    /*Switch* switch1 = new Switch("SWITCH");
-    mainLayout.addWidget(switch1);
-    Switch* switch2 = new Switch("SWITCH");
-    mainLayout.addWidget(switch2);
-    switch2->setDisabled(true);
-    Switch* switch3 = new Switch("SWITCH");
-    mainLayout.addWidget(switch3);
-    switch3->setLayoutDirection(Qt::RightToLeft);
-    Switch* switch4 = new Switch("SWITCH");
-    mainLayout.addWidget(switch4);
-    switch4->setLayoutDirection(Qt::RightToLeft);
-    switch4->setChecked(true);
-    switch4->setDisabled(true);
-
-    QButtonGroup bg;
-    Switch* item1 = new Switch("ITEM1");
-    Switch* item2 = new Switch("ITEM2");
-    bg.addButton(item1);
-    bg.addButton(item2);
-    mainLayout.addWidget(item1);
-    mainLayout.addWidget(item2);
-    mainLayout.setSpacing(100);*/
 
     Switch* proxySwitch = new Switch("On/Off");
     proxySwitch->setLayoutDirection(Qt::RightToLeft);
@@ -77,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     //this->setWindowFlags(Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint);
     this->setWindowFlag(Qt::WindowStaysOnTopHint, true);
 
-    this->setGeometry(0, 0, 350, 300);
+    this->setGeometry(0, 0, 300, 250);
 }
 
 void MainWindow::toggleProxyHandler(int value)
@@ -87,8 +65,8 @@ void MainWindow::toggleProxyHandler(int value)
 
     QString program = "gsettings";
 
-    QStringList proxyModeCMD;
-    proxyModeCMD << "set" << "org.gnome.system.proxy" << "mode" << QString("'%1'").arg("manual");
+    QStringList proxyModeManualCMD;
+    proxyModeManualCMD << "set" << "org.gnome.system.proxy" << "mode" << QString("'%1'").arg("manual");
     QStringList proxyModeAutoCMD;
     proxyModeAutoCMD << "set" << "org.gnome.system.proxy" << "mode" << QString("'%1'").arg("auto");
 
@@ -102,20 +80,25 @@ void MainWindow::toggleProxyHandler(int value)
     QStringList proxySocksHostPortCMD;
     proxySocksHostPortCMD << "set" << "org.gnome.system.proxy.socks" << "port" << QString("%1").arg(mSocksHostPortEdit->text());
 
-
+    QStringList ignoreHostsList = mIgnoreHostsEdit->text().split(",");
+    QStringList ignoreHostsListWithSingleQuote;
+    foreach (QString h, ignoreHostsList)
+    {
+        ignoreHostsListWithSingleQuote.append(QString("'%1'").arg(h));
+    }
     QStringList ignoreHostsCMD;
-    ignoreHostsCMD << "set" << "org.gnome.system.proxy" << "ignore-hosts" << QString("'%1'").arg(mSocksHostPortEdit->text());
-    //QString ignoreHostsCMD = QStringLiteral("gsettings set org.gnome.system.proxy ignore-hosts %1 ").arg(mIgnoreHostsEdit->text());
+    ignoreHostsCMD << "set" << "org.gnome.system.proxy" << "ignore-hosts" << QString("[%1]").arg(ignoreHostsListWithSingleQuote.join(","));
 
     QProcess process;
 
     if (value == 2) {
-        qDebug() << QProcess::startDetached(program, proxyModeCMD); //Starts execution of command
+        qDebug() << QProcess::startDetached(program, proxyModeManualCMD); //Starts execution of command
 
         qDebug() << QProcess::startDetached(program, proxyHttpHostCMD);
         qDebug() << QProcess::startDetached(program, proxyHttpHostPortCMD);
         qDebug() << QProcess::startDetached(program, proxySocksHostCMD);
         qDebug() << QProcess::startDetached(program, proxySocksHostPortCMD);
+        qDebug() << QProcess::startDetached(program, ignoreHostsCMD);
 
     } else if (value ==0) {
         QProcess::startDetached(program, proxyModeAutoCMD); //Starts execution of command
