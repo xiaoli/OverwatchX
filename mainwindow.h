@@ -20,6 +20,8 @@ private:
     QLineEdit* mSocksHostPortEdit;
     QLineEdit* mIgnoreHostsEdit;
 
+    QLineEdit* mClashConfigURIEdit;
+
 signals:
 
 };

@@ -16,10 +16,21 @@ MainWindow::MainWindow(QWidget *parent)
     QWidget* centralWidget = new QWidget(this);
     QGridLayout *mainLayout = new QGridLayout(centralWidget);
 
+    QLabel* clashConfigLabel = new QLabel();
+    clashConfigLabel->setText("Clash config URI:");
+    mClashConfigURIEdit= new QLineEdit();
+    mClashConfigURIEdit->setText("127.0.0.1");
+    QPushButton* updateConfigButton = new QPushButton();
+    updateConfigButton->setText("Update");
+
     Switch* proxySwitch = new Switch("Proxy On/Off");
     proxySwitch->setFont(uniqueFont);
     proxySwitch->setLayoutDirection(Qt::RightToLeft);
     connect(proxySwitch, &Switch::stateChanged, this, &MainWindow::toggleProxyHandler);
+
+    QFrame* line = new QFrame();
+    line->setFrameShape(QFrame::HLine);
+    line->setFrameShadow(QFrame::Sunken);
 
     QLabel* httpProxy = new QLabel();
     httpProxy->setText("HTTP Proxy");
@@ -46,18 +57,24 @@ MainWindow::MainWindow(QWidget *parent)
 
     mainLayout->addWidget(proxySwitch, 0, 0, 1, 2);
 
-    mainLayout->addWidget(httpProxy, 1, 0, 1, 1);
-    mainLayout->addWidget(mHttpProxyEdit, 1, 1, 1, 1);
-    mainLayout->addWidget(mHttpProxyPortEdit, 1, 2, 1, 1);
+    mainLayout->addWidget(clashConfigLabel, 1, 0, 1, 1);
+    mainLayout->addWidget(mClashConfigURIEdit, 1, 1, 1, 1);
+    mainLayout->addWidget(updateConfigButton, 1, 2, 1, 1);
 
-    mainLayout->addWidget(socksHost, 2, 0, 1, 1);
-    mainLayout->addWidget(mSocksHostEdit, 2, 1, 1, 1);
-    mainLayout->addWidget(mSocksHostPortEdit, 2, 2, 1, 1);
+    mainLayout->addWidget(line, 2, 0, 2, 3);
 
-    mainLayout->addWidget(ignoreHosts, 3, 0, 1, 1);
-    mainLayout->addWidget(mIgnoreHostsEdit, 3, 1, 1, 2);
+    mainLayout->addWidget(httpProxy, 3, 0, 1, 1);
+    mainLayout->addWidget(mHttpProxyEdit, 3, 1, 1, 1);
+    mainLayout->addWidget(mHttpProxyPortEdit, 3, 2, 1, 1);
 
-    mainLayout->addWidget(copyShellCommand, 4, 0, 1, 3);
+    mainLayout->addWidget(socksHost, 4, 0, 1, 1);
+    mainLayout->addWidget(mSocksHostEdit, 4, 1, 1, 1);
+    mainLayout->addWidget(mSocksHostPortEdit, 4, 2, 1, 1);
+
+    mainLayout->addWidget(ignoreHosts, 5, 0, 1, 1);
+    mainLayout->addWidget(mIgnoreHostsEdit, 5, 1, 1, 2);
+
+    mainLayout->addWidget(copyShellCommand, 6, 0, 1, 3);
 
     centralWidget->setLayout(mainLayout);
     this->setCentralWidget(centralWidget);
